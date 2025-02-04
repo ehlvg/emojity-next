@@ -1,99 +1,103 @@
+// Theme Selector
+
 if (localStorage.getItem("selectedTheme")) {
-	const selectedTheme = localStorage.getItem("selectedTheme");
-	document.querySelector("#theme").value = selectedTheme;
-	if (selectedTheme === "orange") {
-		document.documentElement.style.setProperty(
-			"--chosen-accent",
-			"var(--color-orange-400)"
-		);
-	} else if (selectedTheme === "blue") {
-		document.documentElement.style.setProperty(
-			"--chosen-accent",
-			"var(--color-blue-600)"
-		);
-	} else if (selectedTheme === "green") {
-		document.documentElement.style.setProperty(
-			"--chosen-accent",
-			"var(--color-green-600)"
-		);
-	} else if (selectedTheme === "purple") {
-		document.documentElement.style.setProperty(
-			"--chosen-accent",
-			"var(--color-purple-600)"
-		);
-	} else if (selectedTheme === "yellow") {
-		document.documentElement.style.setProperty(
-			"--chosen-accent",
-			"var(--color-amber-400)"
-		);
-	} else if (selectedTheme === "red") {
-		document.documentElement.style.setProperty(
-			"--chosen-accent",
-			"var(--color-red-500)"
-		);
-	} else if (selectedTheme == "default") {
-		document.documentElement.style.setProperty(
-			"--chosen-accent",
-			"var(--color-gray-800)"
-		);
-	}
+  const selectedTheme = localStorage.getItem("selectedTheme");
+  document.querySelector("#theme").value = selectedTheme;
+  if (selectedTheme === "orange") {
+    document.documentElement.style.setProperty(
+      "--chosen-accent",
+      "var(--color-orange-400)"
+    );
+  } else if (selectedTheme === "blue") {
+    document.documentElement.style.setProperty(
+      "--chosen-accent",
+      "var(--color-blue-600)"
+    );
+  } else if (selectedTheme === "green") {
+    document.documentElement.style.setProperty(
+      "--chosen-accent",
+      "var(--color-green-600)"
+    );
+  } else if (selectedTheme === "purple") {
+    document.documentElement.style.setProperty(
+      "--chosen-accent",
+      "var(--color-purple-600)"
+    );
+  } else if (selectedTheme === "yellow") {
+    document.documentElement.style.setProperty(
+      "--chosen-accent",
+      "var(--color-amber-400)"
+    );
+  } else if (selectedTheme === "red") {
+    document.documentElement.style.setProperty(
+      "--chosen-accent",
+      "var(--color-red-500)"
+    );
+  } else if (selectedTheme == "default") {
+    document.documentElement.style.setProperty(
+      "--chosen-accent",
+      "var(--color-gray-800)"
+    );
+  }
 }
 
 document.getElementById("theme").addEventListener("change", function () {
-	const themeValue = document.querySelector("#theme").value;
-	if (themeValue === "orange") {
-		document.documentElement.style.setProperty(
-			"--chosen-accent",
-			"var(--color-orange-400)"
-		);
-	} else if (themeValue === "blue") {
-		document.documentElement.style.setProperty(
-			"--chosen-accent",
-			"var(--color-blue-600)"
-		);
-	} else if (themeValue === "green") {
-		document.documentElement.style.setProperty(
-			"--chosen-accent",
-			"var(--color-green-600)"
-		);
-	} else if (themeValue === "purple") {
-		document.documentElement.style.setProperty(
-			"--chosen-accent",
-			"var(--color-purple-600)"
-		);
-	} else if (themeValue === "yellow") {
-		document.documentElement.style.setProperty(
-			"--chosen-accent",
-			"var(--color-amber-400)"
-		);
-	} else if (themeValue === "red") {
-		document.documentElement.style.setProperty(
-			"--chosen-accent",
-			"var(--color-red-500)"
-		);
-	} else if (themeValue == "default") {
-		document.documentElement.style.setProperty(
-			"--chosen-accent",
-			"var(--color-gray-800)"
-		);
-	}
+  const themeValue = document.querySelector("#theme").value;
+  if (themeValue === "orange") {
+    document.documentElement.style.setProperty(
+      "--chosen-accent",
+      "var(--color-orange-400)"
+    );
+  } else if (themeValue === "blue") {
+    document.documentElement.style.setProperty(
+      "--chosen-accent",
+      "var(--color-blue-600)"
+    );
+  } else if (themeValue === "green") {
+    document.documentElement.style.setProperty(
+      "--chosen-accent",
+      "var(--color-green-600)"
+    );
+  } else if (themeValue === "purple") {
+    document.documentElement.style.setProperty(
+      "--chosen-accent",
+      "var(--color-purple-600)"
+    );
+  } else if (themeValue === "yellow") {
+    document.documentElement.style.setProperty(
+      "--chosen-accent",
+      "var(--color-amber-400)"
+    );
+  } else if (themeValue === "red") {
+    document.documentElement.style.setProperty(
+      "--chosen-accent",
+      "var(--color-red-500)"
+    );
+  } else if (themeValue == "default") {
+    document.documentElement.style.setProperty(
+      "--chosen-accent",
+      "var(--color-gray-800)"
+    );
+  }
 
-	localStorage.setItem("selectedTheme", themeValue);
+  localStorage.setItem("selectedTheme", themeValue);
 });
 
 document
-	.querySelector("emoji-picker")
-	.addEventListener("emoji-click", (event) => {
-		console.log(event.detail.emoji.unicode);
-	});
+  .querySelector("emoji-picker")
+  .addEventListener("emoji-click", (event) => {
+    console.log(event.detail.emoji.unicode);
+  });
 
 const button = document.querySelector("button");
 const tooltip = document.querySelector(".tooltip");
 Popper.createPopper(button, tooltip);
 
 document.querySelector("button").onclick = () => {
-	tooltip.classList.toggle("shown");
+  tooltip.classList.toggle("shown");
 };
+
+// Saved Colors
 
 // Get DOM elements
 const colorPicker = document.getElementById("color-picker");
@@ -105,240 +109,239 @@ let savedColors = JSON.parse(localStorage.getItem("savedColors")) || [];
 
 // Function to save colors to localStorage
 const saveToLocalStorage = () => {
-	localStorage.setItem("savedColors", JSON.stringify(savedColors));
+  localStorage.setItem("savedColors", JSON.stringify(savedColors));
 };
 
 // Function to create color preview element
 const createColorPreview = (color) => {
-	const colorPreview = document.createElement("li");
-	colorPreview.className =
-		"w-8 h-8 rounded-full cursor-pointer hover:scale-110 transition-transform";
-	colorPreview.style.backgroundColor = color;
+  const colorPreview = document.createElement("li");
+  colorPreview.className =
+    "w-8 h-8 rounded-full cursor-pointer hover:scale-110 transition-transform";
+  colorPreview.style.backgroundColor = color;
 
-	// Add click event to set color picker value and update avatar
-	colorPreview.addEventListener("click", (e) => {
-		if (e.altKey) {
-			// Remove color when Alt+Click
-			removeColor(color);
-		} else {
-			colorPicker.value = color;
-			// Update current state and avatar
-			currentState.backgroundColor = color;
-			updateAvatar();
-		}
-	});
+  // Add click event to set color picker value and update avatar
+  colorPreview.addEventListener("click", (e) => {
+    if (e.altKey) {
+      // Remove color when Alt+Click
+      removeColor(color);
+    } else {
+      colorPicker.value = color;
+      // Update current state and avatar
+      currentState.backgroundColor = color;
+      updateAvatar();
+    }
+  });
 
-	return colorPreview;
+  return colorPreview;
 };
 
 // Load saved colors on page load
 const loadSavedColors = () => {
-	colorList.innerHTML = ""; // Clear existing colors
-	savedColors.forEach((color) => {
-		colorList.appendChild(createColorPreview(color));
-	});
+  colorList.innerHTML = ""; // Clear existing colors
+  savedColors.forEach((color) => {
+    colorList.appendChild(createColorPreview(color));
+  });
 };
 
 // Add click event listener to save button
 saveBtn.addEventListener("click", () => {
-	const selectedColor = colorPicker.value;
+  const selectedColor = colorPicker.value;
 
-	// Check if color is already saved
-	if (!savedColors.includes(selectedColor)) {
-		savedColors.push(selectedColor);
+  // Check if color is already saved
+  if (!savedColors.includes(selectedColor)) {
+    savedColors.push(selectedColor);
 
-		// Save to localStorage
-		saveToLocalStorage();
+    // Save to localStorage
+    saveToLocalStorage();
 
-		// Add to color list
-		colorList.appendChild(createColorPreview(selectedColor));
-	}
+    // Add to color list
+    colorList.appendChild(createColorPreview(selectedColor));
+  }
 });
 
 // Load saved colors when page loads
 loadSavedColors();
 
-///////////////
+// Previewing avatar
 
 // Initialize Two.js for preview
 const previewContainer = document.querySelector(".preview");
 const two = new Two({
-	type: Two.Types.canvas,
-	width: 300,
-	height: 300
+  type: Two.Types.canvas,
+  width: 300,
+  height: 300,
 }).appendTo(previewContainer);
 
 // State management
 let currentState = {
-	backgroundColor: "#efefef",
-	emoji: "🍊",
-	size: 300, // Preview size
-	exportSize: 1024 // High quality export size
+  backgroundColor: "#efefef",
+  emoji: "🍊",
+  size: 300, // Preview size
+  exportSize: 1024, // High quality export size
 };
 
 // Function to remove color
 const removeColor = (color) => {
-	savedColors = savedColors.filter((c) => c !== color);
-	saveToLocalStorage();
-	loadSavedColors();
+  savedColors = savedColors.filter((c) => c !== color);
+  saveToLocalStorage();
+  loadSavedColors();
 };
 
 // Create background and emoji group
 const background = two.makeRectangle(
-	two.width / 2,
-	two.height / 2,
-	two.width,
-	two.height
+  two.width / 2,
+  two.height / 2,
+  two.width,
+  two.height
 );
 const emojiGroup = two.makeGroup();
 
 // Function to update the preview
 const updateAvatar = () => {
-	background.fill = currentState.backgroundColor;
-	background.noStroke();
+  background.fill = currentState.backgroundColor;
+  background.noStroke();
 
-	emojiGroup.remove(emojiGroup.children);
+  emojiGroup.remove(emojiGroup.children);
 
-	if (currentState.emoji) {
-		const emojiText = two.makeText(
-			currentState.emoji,
-			two.width / 2,
-			two.height / 2
-		);
-		emojiText.size = two.width * 0.5;
-		emojiGroup.add(emojiText);
-	}
+  if (currentState.emoji) {
+    const emojiText = two.makeText(
+      currentState.emoji,
+      two.width / 2,
+      two.height / 2
+    );
+    emojiText.size = two.width * 0.5;
+    emojiGroup.add(emojiText);
+  }
 
-	two.update();
+  two.update();
 };
 
 // Function to create high-resolution export
 const createExportCanvas = (size) => {
-	const exportCanvas = document.createElement("canvas");
-	exportCanvas.width = size;
-	exportCanvas.height = size;
-	const ctx = exportCanvas.getContext("2d");
+  const exportCanvas = document.createElement("canvas");
+  exportCanvas.width = size;
+  exportCanvas.height = size;
+  const ctx = exportCanvas.getContext("2d");
 
-	// Draw background
-	ctx.fillStyle = currentState.backgroundColor;
-	ctx.fillRect(0, 0, size, size);
+  // Draw background
+  ctx.fillStyle = currentState.backgroundColor;
+  ctx.fillRect(0, 0, size, size);
 
-	// Draw emoji
-	if (currentState.emoji) {
-		ctx.font = `${size * 0.5}px Arial`; // Scale font size with canvas
-		ctx.textAlign = "center";
-		ctx.textBaseline = "middle";
-		ctx.fillText(currentState.emoji, size / 2, size / 2);
-	}
+  // Draw emoji
+  if (currentState.emoji) {
+    ctx.font = `${size * 0.5}px Arial`; // Scale font size with canvas
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(currentState.emoji, size / 2, size / 2);
+  }
 
-	return exportCanvas;
+  return exportCanvas;
 };
 
 // Listen for color changes
 colorPicker.addEventListener("input", (e) => {
-	currentState.backgroundColor = e.target.value;
-	updateAvatar();
+  currentState.backgroundColor = e.target.value;
+  updateAvatar();
 });
 
 // Listen for emoji selection
 document
-	.querySelector("emoji-picker")
-	.addEventListener("emoji-click", (event) => {
-		currentState.emoji = event.detail.emoji.unicode;
-		updateAvatar();
-	});
+  .querySelector("emoji-picker")
+  .addEventListener("emoji-click", (event) => {
+    currentState.emoji = event.detail.emoji.unicode;
+    updateAvatar();
+  });
 
 // Create export button
 const exportButton = document.createElement("button");
 exportButton.textContent = "Export Avatar";
 exportButton.className =
-	"bg-[var(--chosen-accent)] text-white p-2 rounded-lg mt-4";
+  "bg-[var(--chosen-accent)] text-white p-2 rounded-lg mt-4";
 previewContainer.appendChild(exportButton);
 
 // Create size selector
 const sizeSelector = document.createElement("select");
 sizeSelector.className = "mt-2 p-2 rounded-lg border border-gray-200";
 const sizes = [
-	{ label: "Small (256x256)", value: 256 },
-	{ label: "Medium (512x512)", value: 512 },
-	{ label: "Large (1024x1024)", value: 1024 },
-	{ label: "Extra Large (2048x2048)", value: 2048 }
+  { label: "Small (256x256)", value: 256 },
+  { label: "Medium (512x512)", value: 512 },
+  { label: "Large (1024x1024)", value: 1024 },
+  { label: "Extra Large (2048x2048)", value: 2048 },
 ];
 
 sizes.forEach((size) => {
-	const option = document.createElement("option");
-	option.value = size.value;
-	option.textContent = size.label;
-	if (size.value === currentState.exportSize) {
-		option.selected = true;
-	}
-	sizeSelector.appendChild(option);
+  const option = document.createElement("option");
+  option.value = size.value;
+  option.textContent = size.label;
+  if (size.value === currentState.exportSize) {
+    option.selected = true;
+  }
+  sizeSelector.appendChild(option);
 });
 
 previewContainer.insertBefore(sizeSelector, exportButton);
 
 // Export functionality
 exportButton.addEventListener("click", () => {
-	if (!currentState.emoji) {
-		alert("Please select an emoji first!");
-		return;
-	}
+  if (!currentState.emoji) {
+    alert("Please select an emoji first!");
+    return;
+  }
 
-	const selectedSize = parseInt(sizeSelector.value);
-	const exportCanvas = createExportCanvas(selectedSize);
+  const selectedSize = parseInt(sizeSelector.value);
+  const exportCanvas = createExportCanvas(selectedSize);
 
-	// Create download link
-	const dataUrl = exportCanvas.toDataURL("image/png");
-	const downloadLink = document.createElement("a");
-	downloadLink.href = dataUrl;
-	downloadLink.download = `emoji-avatar-${selectedSize}x${selectedSize}.png`;
-	downloadLink.click();
+  // Create download link
+  const dataUrl = exportCanvas.toDataURL("image/png");
+  const downloadLink = document.createElement("a");
+  downloadLink.href = dataUrl;
+  downloadLink.download = `emoji-avatar-${selectedSize}x${selectedSize}.png`;
+  downloadLink.click();
 });
 
 // Initial render
 updateAvatar();
 
-///////////////////////////////////
+// Picker Bounds Checker
 
-// Получаем необходимые элементы
+// DOM elements
 const emojiButton = document.querySelector("#emoji-button"); // кнопка для открытия
 const emojiPicker = document.querySelector("emoji-picker");
 
-// Функция для показа пикера
+// Showing picker function
 function showPicker() {
-	tooltip.style.display = "block";
+  tooltip.style.display = "block";
 }
 
-// Функция для скрытия пикера
+// Hiding picker function
 function hidePicker() {
-	tooltip.style.display = "none";
+  tooltip.style.display = "none";
 }
 
-// Обработчик клика на кнопку
 emojiButton.addEventListener("click", (event) => {
-	event.stopPropagation(); // Предотвращаем всплытие события
+  event.stopPropagation(); // Preventing of the event
 
-	// Если пикер скрыт - показываем, если показан - скрываем
-	if (tooltip.style.display === "none" || !tooltip.style.display) {
-		showPicker();
-	} else {
-		hidePicker();
-	}
+  // Toggle picker display
+  if (tooltip.style.display === "none" || !tooltip.style.display) {
+    showPicker();
+  } else {
+    hidePicker();
+  }
 });
 
-// Обработчик клика вне пикера
+// Click out of bounds
 document.addEventListener("click", (event) => {
-	// Проверяем, что клик был не по пикеру и не по кнопке
-	if (
-		!emojiPicker.contains(event.target) &&
-		!emojiButton.contains(event.target) &&
-		tooltip.style.display !== "none"
-	) {
-		hidePicker();
-	}
+  // Check if click wasn't in the bounds of the picker and button
+  if (
+    !emojiPicker.contains(event.target) &&
+    !emojiButton.contains(event.target) &&
+    tooltip.style.display !== "none"
+  ) {
+    hidePicker();
+  }
 });
 
-// Предотвращаем закрытие при клике на сам пикер
+// Prevent closing when clicking on the picker
 emojiPicker.addEventListener("click", (event) => {
-	event.stopPropagation();
+  event.stopPropagation();
 });

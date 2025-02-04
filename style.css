@@ -1,98 +1,106 @@
 :root {
-	--chosen-accent: var(--color-blue-600);
+  --chosen-accent: var(--color-stone-800);
 }
 
- .tooltip:not(.shown) {
-          display: none;
-      }
+.tooltip:not(.shown) {
+  display: none;
+}
 
 emoji-picker {
-	position: absolute;
-	z-index: 999;
-	left: -200px;
-	top: 50px;
-	--border-radius: 12px;
+  position: absolute;
+  z-index: 999;
+  left: -200px;
+  top: 50px;
+
+  --border-radius: 12px;
 }
 
 input[type="color"] {
-	border-radius: 24px;
+  border-radius: 24px;
 }
 
 .preview canvas {
-border-radius: 12px;
-	box-shadow: var(--drop-shadow-lg);
-width: 100%!important;
-	height: 100%!important;
+  border-radius: 12px;
+  box-shadow: var(--drop-shadow-lg);
+  margin-left: auto;
+  margin-right: auto;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 256px;
 }
 
 body {
-	background-color: var(--chosen-accent);
+  background-color: var(--chosen-accent);
 }
 
 .main {
-	animation: 1s mainAnim;
-	transition: 0.5s all ease-in-out;
+  animation: 1s main-anim;
+  transition: 0.5s all ease-in-out;
 }
 
 .header-anim {
-	animation: 1.5s headerAnim cubic-bezier(0.2, 0.6, 0.2, 1);
+  animation: 1.5s header-anim cubic-bezier(0.2, 0.6, 0.2, 1);
 }
 
 .emj-anim {
-  animation: 1.5s cubic-bezier(0.2, 0.3, 0.8, 0.2) emojiAnimation;
+  animation: 1.5s cubic-bezier(0.2, 0.3, 0.8, 0.2) emoji-anim;
 }
 
-@keyframes emojiAnimation {
-	0% {
-		opacity: 0;
-		filter: blur(10px);
-		rotate: 90deg;
-		text-shadow: 15px 15px 10px rgba(0,0,0,.2);
-		transform: scale(8) translatex(0);
-	}
-	25% {
-		filter: blur(2px);
-	}
-	
-	45% {
-		filter: none;
-	}
-	50% {
-		text-shadow: 10px 10px 5px rgba(0,0,0, .3);
-	}
-	
-	85% {
-		text-shadow: 5px 5px 5px rgba(0,0,0, .3);
-	}
-	100% {
-		transform: scale(1);
-		text-shadow: 4px 4px 5px rgba(0,0,0, .2);
-	}
+@keyframes emoji-anim {
+  0% {
+    opacity: 0;
+    filter: blur(10px);
+    rotate: 90deg;
+    text-shadow: 15px 15px 10px rgba(0 0 0 \0.2);
+    transform: scale(8) translateX(0);
+  }
+
+  25% {
+    filter: blur(2px);
+  }
+
+  45% {
+    filter: none;
+  }
+
+  50% {
+    text-shadow: 10px 10px 5px rgba(0, 0, 0, 0.3);
+  }
+
+  85% {
+    text-shadow: 5px 5px 5px rgba(0, 0, 0, 0.3);
+  }
+
+  100% {
+    transform: scale(1);
+    text-shadow: 4px 4px 5px rgba(0 0 0 \0.2);
+  }
 }
 
-@keyframes mainAnim {
-	from {
-		opacity: 0;
-		filter: blur(20px);
-		transform: scale(0.5);
-	}
+@keyframes main-anim {
+  from {
+    opacity: 0;
+    filter: blur(20px);
+    transform: scale(0.5);
+  }
 
-	to {
-		opacity: 1;
-		transform: none;
-		filter: none;
-	}
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
 }
 
-@keyframes headerAnim {
-	from {
-		transform: translatex(-400px);
-		opacity: 0;
-	}
-	to {
-		opacity: 1
-			transform: none;
-	}
+@keyframes header-anim {
+  from {
+    transform: translateX(-400px);
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 
 input[type="color" i] {
@@ -100,16 +108,16 @@ input[type="color" i] {
   inline-size: 32px;
   block-size: 32px;
   border-width: 1px;
-	box-sizing: border-box;
+  box-sizing: border-box;
   border-style: solid;
-  border-color: rgb(153, 153, 153);
+  border-color: rgb(153 153 153);
 }
 
 input[type="color" i]::-webkit-color-swatch,
 input[type="color" i]::-moz-color-swatch {
-    border-radius: 50%;
+  border-radius: 50%;
 }
 
 input[type="color" i]::-webkit-color-swatch-wrapper {
-    padding: 0;
+  padding: 0;
 }

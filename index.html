@@ -1,58 +1,75 @@
 <!DOCTYPE html>
-<html lang="en" >
-<head>
-  <meta charset="UTF-8">
-  <title>Emojity NEXT</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-<script type="module" src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"></script><link rel="stylesheet" href="./style.css">
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Emojity NEXT</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script
+      type="module"
+      src="https://cdn.jsdelivr.net/npm/emoji-picker-element@^1/index.js"
+    ></script>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <main
+      class="max-w-[800px] sm:mx-auto main flex flex-col gap-3 card bg-white m-5 p-5 rounded-lg shadow-lg border border-gray-200"
+    >
+      <div class="flex justify-between">
+        <header class="flex gap-2 items-center">
+          <h1 class="text-2xl font-bold header-anim">Emojity</h1>
+          <h1
+            class="emj-anim text-4xl bg-gray-100 p-2 rounded-full border border-gray-200"
+          >
+            😍
+          </h1>
+        </header>
+        <select name="Accent" id="theme">
+          <option selected value="default">Default</option>
+          <option value="blue">Blue</option>
+          <option value="orange">Orange</option>
+          <option value="green">Green</option>
+          <option value="purple">Purple</option>
+          <option value="yellow">Yellow</option>
+          <option value="red">Red</option>
+        </select>
+      </div>
+      <hr class="text-gray-200" />
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+        <div class="content flex gap-2 flex-col">
+          <button
+            class="bg-[var(--chosen-accent)] text-white p-2 rounded-lg"
+            id="emoji-button"
+          >
+            Pick an emoji
+          </button>
+          <div class="tooltip" role="tooltip">
+            <emoji-picker
+              class="light left-[-50px] sm:left-[-200px]"
+            ></emoji-picker>
+          </div>
+          <div class="colors bg-gray-100 p-3 rounded-lg flex flex-col">
+            <h1 class="text-lg pb-2 font-bold">Background color</h1>
+            <div class="color-options flex items-center">
+              <input type="color" id="color-picker" />
+              <button
+                id="save-btn"
+                class="bg-stone-800 p-2 text-white rounded-lg m-4"
+              >
+                Save
+              </button>
+            </div>
 
-</head>
-<body>
-<!-- partial:index.partial.html -->
-<main class="main flex flex-col gap-3 card bg-white m-5 p-5 rounded-lg shadow-lg border border-gray-200">
-	<div class="flex justify-between">
-		<header class="flex gap-2 items-center">
-			<h1 class="text-2xl font-bold header-anim">Emojity</h1>
-			<h1 class="emj-anim text-4xl bg-gray-100 p-2 rounded-full border border-gray-200">😍</h1>
-		</header>
-		<select name="Accent" id="theme">
-			<option selected value="default">Default</option>
-			<option value="blue">Blue</option>
-			<option value="orange">Orange</option>
-			<option value="green">Green</option>
-			<option value="purple">Purple</option>
-			<option value="yellow">Yellow</option>
-			<option value="red">Red</option>
-		</select>
-	</div>
-	<hr class="text-gray-200" />
-	<div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
-		<div class="content flex gap-2 flex-col">
-			<button class="bg-[var(--chosen-accent)] text-white p-2 rounded-lg" id="emoji-button">Pick an emoji</button>
-			<div class="tooltip" role="tooltip">
-				<emoji-picker class="light left-[-50px] sm:left-[-200px]"></emoji-picker>
-			</div>
-			<div class="colors bg-gray-100 p-3 rounded-lg flex flex-col">
-				<h1 class="text-lg pb-2 font-bold">Background color</h1>
-				<div class="color-options flex items-center">
-					<input type="color" id="color-picker">
-					<button id="save-btn" class="bg-stone-800 p-2 text-white rounded-lg m-4">Save</button>
-				</div>
+            <h1 class="text-lg pt-4 pb-2 font-bold">Saved colors</h1>
 
-				<h1 class="text-lg pt-4 pb-2 font-bold">Saved colors</h1>
-
-				<ul id="color-list" class="flex flex-wrap gap-2">
-				</ul>
-			</div>
-		</div>
-		<div class="preview rounded-lg flex flex-col">
-		</div>
-	</div>
-</main>
-<!-- partial -->
-  <script src='https://unpkg.com/@tailwindcss/browser@4'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/two.js/0.8.15/two.min.js'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.8/umd/popper.min.js'></script><script type="module" src="./script.js"></script>
-
-</body>
+            <ul id="color-list" class="flex flex-wrap gap-2"></ul>
+          </div>
+        </div>
+        <div class="preview rounded-lg flex flex-col"></div>
+      </div>
+    </main>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/two.js/0.8.15/two.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.8/umd/popper.min.js"></script>
+    <script type="module" src="./script.js"></script>
+  </body>
 </html>
