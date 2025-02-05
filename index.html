@@ -36,16 +36,51 @@
       <hr class="text-gray-200" />
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
         <div class="content flex gap-2 flex-col">
-          <button
-            class="bg-[var(--chosen-accent)] text-white p-2 rounded-lg"
-            id="emoji-button"
-          >
-            Pick an emoji
-          </button>
+          <div class="flex gap-2">
+            <button
+              class="bg-[var(--chosen-accent)] text-white p-2 rounded-lg"
+              id="emoji-button"
+            >
+              Pick an emoji
+            </button>
+            <input
+              type="file"
+              id="image-upload"
+              accept="image/png,image/jpeg,image/svg+xml"
+              class="hidden"
+            />
+            <button
+              class="bg-[var(--chosen-accent)] text-white p-2 rounded-lg"
+              id="upload-button"
+            >
+              Upload Image
+            </button>
+          </div>
           <div class="tooltip" role="tooltip">
             <emoji-picker
               class="light left-[-50px] sm:left-[-200px]"
             ></emoji-picker>
+          </div>
+          <div class="controls bg-gray-100 p-3 rounded-lg flex flex-col gap-2">
+            <div class="size-control">
+              <label for="size-slider" class="text-sm font-bold"
+                >Content Size: <span id="size-value">100</span>%</label
+              >
+              <input
+                type="range"
+                id="size-slider"
+                min="20"
+                max="100"
+                value="100"
+                class="w-full"
+              />
+            </div>
+            <div class="shadow-control">
+              <label class="flex items-center gap-2">
+                <input type="checkbox" id="shadow-toggle" />
+                <span class="text-sm font-bold">Add Shadow</span>
+              </label>
+            </div>
           </div>
           <div class="colors bg-gray-100 p-3 rounded-lg flex flex-col">
             <h1 class="text-lg pb-2 font-bold">Background color</h1>

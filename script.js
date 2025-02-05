@@ -178,7 +178,66 @@ let currentState = {
   emoji: "🍊",
   size: 300, // Preview size
   exportSize: 1024, // High quality export size
+  contentSize: 100,
+  contentType: "emoji", // 'emoji' or 'image'
+  imageUrl: null,
+  hasShadow: false,
 };
+
+// Add new DOM elements
+const uploadButton = document.getElementById("upload-button");
+const imageUpload = document.getElementById("image-upload");
+const sizeSlider = document.getElementById("size-slider");
+const sizeValue = document.getElementById("size-value");
+const shadowToggle = document.getElementById("shadow-toggle");
+
+// Добавляем глобальные переменные для обновляемого превью
+let loadedImg = null;
+let imageSprite = null;
+
+// Handle file upload
+uploadButton.addEventListener("click", () => imageUpload.click());
+
+imageUpload.addEventListener("change", (e) => {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        loadedImg = img;
+        // При переключении сбрасываем ранее созданный спрайт
+        if (imageSprite) {
+          emojiGroup.remove(imageSprite);
+          imageSprite = null;
+        }
+        currentState.imageUrl = event.target.result;
+        currentState.contentType = "image";
+        currentState.emoji = null;
+        // Сброс размера в 100%
+        currentState.contentSize = 100;
+        sizeSlider.value = 100;
+        sizeValue.textContent = "100";
+        updateAvatar();
+      };
+      img.src = event.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+// Handle size slider
+sizeSlider.addEventListener("input", (e) => {
+  currentState.contentSize = e.target.value;
+  sizeValue.textContent = e.target.value;
+  updateAvatar();
+});
+
+// Handle shadow toggle
+shadowToggle.addEventListener("change", (e) => {
+  currentState.hasShadow = e.target.checked;
+  updateAvatar();
+});
 
 // Function to remove color
 const removeColor = (color) => {
@@ -201,19 +260,58 @@ const updateAvatar = () => {
   background.fill = currentState.backgroundColor;
   background.noStroke();
 
-  emojiGroup.remove(emojiGroup.children);
+  // Очищаем группу контента
+  while (emojiGroup.children.length > 0) {
+    emojiGroup.remove(emojiGroup.children[0]);
+  }
 
-  if (currentState.emoji) {
+  const scale = parseFloat(currentState.contentSize) / 100;
+
+  if (currentState.contentType === "emoji" && currentState.emoji) {
+    // Всегда создаем новый элемент для emoji
+    const baseSize = two.width * 0.4;
     const emojiText = two.makeText(
       currentState.emoji,
       two.width / 2,
       two.height / 2
     );
-    emojiText.size = two.width * 0.5;
+    emojiText.size = baseSize * scale;
+    // Применяем тень и переустанавливаем размер на случай влияния фильтра
+    if (currentState.hasShadow) {
+      emojiText.style = "filter: drop-shadow(3px 3px 2px rgba(0,0,0,0.3))";
+      emojiText.size = baseSize * scale;
+    }
     emojiGroup.add(emojiText);
+    two.update();
+  } else if (currentState.contentType === "image" && loadedImg) {
+    // Если спрайт уже существует, просто обновляем его размеры
+    const aspectRatio = loadedImg.width / loadedImg.height;
+    const baseSize = two.width * 0.8;
+    let width, height;
+    if (aspectRatio > 1) {
+      width = baseSize * scale;
+      height = (baseSize / aspectRatio) * scale;
+    } else {
+      height = baseSize * scale;
+      width = baseSize * aspectRatio * scale;
+    }
+    if (imageSprite) {
+      imageSprite.width = width;
+      imageSprite.height = height;
+    } else {
+      const texture = new Two.Texture(loadedImg);
+      imageSprite = two.makeSprite(texture, two.width / 2, two.height / 2);
+      imageSprite.width = width;
+      imageSprite.height = height;
+    }
+    if (currentState.hasShadow) {
+      imageSprite.style = "filter: drop-shadow(3px 3px 2px rgba(0,0,0,0.3))";
+    } else {
+      imageSprite.style = null;
+    }
+    emojiGroup.add(imageSprite);
+    two.update();
   }
-
-  two.update();
 };
 
 // Function to create high-resolution export
@@ -223,16 +321,63 @@ const createExportCanvas = (size) => {
   exportCanvas.height = size;
   const ctx = exportCanvas.getContext("2d");
 
-  // Draw background
   ctx.fillStyle = currentState.backgroundColor;
   ctx.fillRect(0, 0, size, size);
 
-  // Draw emoji
-  if (currentState.emoji) {
-    ctx.font = `${size * 0.5}px Arial`; // Scale font size with canvas
+  const scale = currentState.contentSize / 100;
+
+  if (currentState.contentType === "emoji" && currentState.emoji) {
+    ctx.font = `${size * 0.5 * scale}px Arial`;
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
+
+    if (currentState.hasShadow) {
+      ctx.shadowColor = "rgba(0,0,0,0.3)";
+      ctx.shadowBlur = 4;
+      ctx.shadowOffsetX = 3;
+      ctx.shadowOffsetY = 3;
+    }
+
     ctx.fillText(currentState.emoji, size / 2, size / 2);
+  } else if (currentState.contentType === "image" && currentState.imageUrl) {
+    const img = new Image();
+    img.onload = () => {
+      const aspectRatio = img.width / img.height;
+      const drawSize = Math.min(size, size) * scale;
+      let drawWidth, drawHeight;
+
+      if (aspectRatio > 1) {
+        drawWidth = drawSize;
+        drawHeight = drawSize / aspectRatio;
+      } else {
+        drawHeight = drawSize;
+        drawWidth = drawSize * aspectRatio;
+      }
+
+      if (currentState.hasShadow) {
+        ctx.shadowColor = "rgba(0,0,0,0.3)";
+        ctx.shadowBlur = 4;
+        ctx.shadowOffsetX = 3;
+        ctx.shadowOffsetY = 3;
+      }
+
+      ctx.drawImage(
+        img,
+        (size - drawWidth) / 2,
+        (size - drawHeight) / 2,
+        drawWidth,
+        drawHeight
+      );
+
+      // Update download link after image is drawn
+      const dataUrl = exportCanvas.toDataURL("image/png");
+      const downloadLink = document.createElement("a");
+      downloadLink.href = dataUrl;
+      downloadLink.download = `avatar-${size}x${size}.png`;
+      downloadLink.click();
+    };
+    img.src = currentState.imageUrl;
+    return; // Early return for async image processing
   }
 
   return exportCanvas;
@@ -248,7 +393,18 @@ colorPicker.addEventListener("input", (e) => {
 document
   .querySelector("emoji-picker")
   .addEventListener("emoji-click", (event) => {
+    currentState.contentType = "emoji";
     currentState.emoji = event.detail.emoji.unicode;
+    // Если до этого был режим image, сбрасываем загруженное изображение и спрайт
+    loadedImg = null;
+    if (imageSprite) {
+      emojiGroup.remove(imageSprite);
+      imageSprite = null;
+    }
+    // Сброс размера в 100%
+    currentState.contentSize = 100;
+    sizeSlider.value = 100;
+    sizeValue.textContent = "100";
     updateAvatar();
   });
 
@@ -283,19 +439,24 @@ previewContainer.insertBefore(sizeSelector, exportButton);
 
 // Export functionality
 exportButton.addEventListener("click", () => {
-  if (!currentState.emoji) {
-    alert("Please select an emoji first!");
+  if (!currentState.emoji && !currentState.imageUrl) {
+    alert("Please select an emoji or upload an image first!");
     return;
   }
 
   const selectedSize = parseInt(sizeSelector.value);
   const exportCanvas = createExportCanvas(selectedSize);
 
-  // Create download link
+  if (currentState.contentType === "image") {
+    // For images, we don't immediately trigger download due to async loading
+    return;
+  }
+
+  // For emojis, we can download immediately
   const dataUrl = exportCanvas.toDataURL("image/png");
   const downloadLink = document.createElement("a");
   downloadLink.href = dataUrl;
-  downloadLink.download = `emoji-avatar-${selectedSize}x${selectedSize}.png`;
+  downloadLink.download = `avatar-${selectedSize}x${selectedSize}.png`;
   downloadLink.click();
 });
 

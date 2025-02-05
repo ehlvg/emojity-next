@@ -121,3 +121,41 @@ input[type="color" i]::-moz-color-swatch {
 input[type="color" i]::-webkit-color-swatch-wrapper {
   padding: 0;
 }
+
+.controls {
+  margin-top: 1rem;
+}
+
+#size-slider {
+  width: 100%;
+  height: 4px;
+  background: var(--chosen-accent);
+  border-radius: 2px;
+  appearance: none;
+}
+
+#size-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  background: var(--chosen-accent);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+#size-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  background: var(--chosen-accent);
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+}
+
+.shadow-control {
+  margin-top: 0.5rem;
+}
+
+#upload-button {
+  white-space: nowrap;
+}
