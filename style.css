@@ -9,10 +9,16 @@
 emoji-picker {
   position: absolute;
   z-index: 999;
-  left: -200px;
+  left: 200px;
   top: 50px;
 
   --border-radius: 12px;
+}
+
+@media (max-width: 768px) {
+  emoji-picker {
+    left: 0;
+  }
 }
 
 input[type="color"] {
@@ -26,7 +32,7 @@ input[type="color"] {
   margin-right: auto;
   width: 100% !important;
   height: 100% !important;
-  max-width: 256px;
+  /* max-width: 256px; */
 }
 
 body {

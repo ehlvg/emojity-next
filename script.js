@@ -163,14 +163,13 @@ saveBtn.addEventListener("click", () => {
 loadSavedColors();
 
 // Previewing avatar
-
-// Initialize Two.js for preview
 const previewContainer = document.querySelector(".preview");
-const two = new Two({
-  type: Two.Types.canvas,
-  width: 300,
-  height: 300,
-}).appendTo(previewContainer);
+const previewCanvas = document.createElement("canvas");
+previewCanvas.width = 300;
+previewCanvas.height = 300;
+previewContainer.innerHTML = "";
+previewContainer.appendChild(previewCanvas);
+const ctx = previewCanvas.getContext("2d");
 
 // State management
 let currentState = {
@@ -191,9 +190,8 @@ const sizeSlider = document.getElementById("size-slider");
 const sizeValue = document.getElementById("size-value");
 const shadowToggle = document.getElementById("shadow-toggle");
 
-// Добавляем глобальные переменные для обновляемого превью
+// Initialize loaded image
 let loadedImg = null;
-let imageSprite = null;
 
 // Handle file upload
 uploadButton.addEventListener("click", () => imageUpload.click());
@@ -206,15 +204,9 @@ imageUpload.addEventListener("change", (e) => {
       const img = new Image();
       img.onload = () => {
         loadedImg = img;
-        // При переключении сбрасываем ранее созданный спрайт
-        if (imageSprite) {
-          emojiGroup.remove(imageSprite);
-          imageSprite = null;
-        }
         currentState.imageUrl = event.target.result;
         currentState.contentType = "image";
         currentState.emoji = null;
-        // Сброс размера в 100%
         currentState.contentSize = 100;
         sizeSlider.value = 100;
         sizeValue.textContent = "100";
@@ -246,71 +238,65 @@ const removeColor = (color) => {
   loadSavedColors();
 };
 
-// Create background and emoji group
-const background = two.makeRectangle(
-  two.width / 2,
-  two.height / 2,
-  two.width,
-  two.height
-);
-const emojiGroup = two.makeGroup();
-
-// Function to update the preview
+// Function to update avatar
 const updateAvatar = () => {
-  background.fill = currentState.backgroundColor;
-  background.noStroke();
-
-  // Очищаем группу контента
-  while (emojiGroup.children.length > 0) {
-    emojiGroup.remove(emojiGroup.children[0]);
-  }
+  // Background color
+  ctx.clearRect(0, 0, previewCanvas.width, previewCanvas.height);
+  ctx.fillStyle = currentState.backgroundColor;
+  ctx.fillRect(0, 0, previewCanvas.width, previewCanvas.height);
 
   const scale = parseFloat(currentState.contentSize) / 100;
 
+  // Emoji mode
   if (currentState.contentType === "emoji" && currentState.emoji) {
-    // Всегда создаем новый элемент для emoji
-    const baseSize = two.width * 0.4;
-    const emojiText = two.makeText(
-      currentState.emoji,
-      two.width / 2,
-      two.height / 2
-    );
-    emojiText.size = baseSize * scale;
-    // Применяем тень и переустанавливаем размер на случай влияния фильтра
+    const baseSize = previewCanvas.width * 0.4;
+    let computedSize = baseSize * scale;
+    computedSize = Math.min(computedSize, previewCanvas.width);
+    ctx.font = `${computedSize}px Arial`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
     if (currentState.hasShadow) {
-      emojiText.style = "filter: drop-shadow(3px 3px 2px rgba(0,0,0,0.3))";
-      emojiText.size = baseSize * scale;
+      ctx.shadowColor = "rgba(0,0,0,0.3)";
+      ctx.shadowBlur = 4;
+      ctx.shadowOffsetX = 3;
+      ctx.shadowOffsetY = 3;
+    } else {
+      ctx.shadowColor = "transparent";
     }
-    emojiGroup.add(emojiText);
-    two.update();
-  } else if (currentState.contentType === "image" && loadedImg) {
-    // Если спрайт уже существует, просто обновляем его размеры
+    ctx.fillStyle = "#000";
+    ctx.fillText(
+      currentState.emoji,
+      previewCanvas.width / 2,
+      previewCanvas.height / 2
+    );
+  }
+  // Image mode
+  else if (currentState.contentType === "image" && loadedImg) {
     const aspectRatio = loadedImg.width / loadedImg.height;
-    const baseSize = two.width * 0.8;
+    const baseSize = previewCanvas.width;
     let width, height;
     if (aspectRatio > 1) {
       width = baseSize * scale;
-      height = (baseSize / aspectRatio) * scale;
+      height = width / aspectRatio;
     } else {
       height = baseSize * scale;
-      width = baseSize * aspectRatio * scale;
+      width = height * aspectRatio;
     }
-    if (imageSprite) {
-      imageSprite.width = width;
-      imageSprite.height = height;
-    } else {
-      const texture = new Two.Texture(loadedImg);
-      imageSprite = two.makeSprite(texture, two.width / 2, two.height / 2);
-      imageSprite.width = width;
-      imageSprite.height = height;
+    if (width > previewCanvas.width) {
+      width = previewCanvas.width;
+      height = width / aspectRatio;
     }
     if (currentState.hasShadow) {
-      imageSprite.style = "filter: drop-shadow(3px 3px 2px rgba(0,0,0,0.3))";
+      ctx.shadowColor = "rgba(0,0,0,0.3)";
+      ctx.shadowBlur = 4;
+      ctx.shadowOffsetX = 3;
+      ctx.shadowOffsetY = 3;
     } else {
-      imageSprite.style = null;
+      ctx.shadowColor = "transparent";
     }
-    emojiGroup.add(imageSprite);
-    two.update();
+    const drawX = (previewCanvas.width - width) / 2;
+    const drawY = (previewCanvas.height - height) / 2;
+    ctx.drawImage(loadedImg, drawX, drawY, width, height);
   }
 };
 
@@ -319,26 +305,26 @@ const createExportCanvas = (size) => {
   const exportCanvas = document.createElement("canvas");
   exportCanvas.width = size;
   exportCanvas.height = size;
-  const ctx = exportCanvas.getContext("2d");
+  const ctxExport = exportCanvas.getContext("2d");
 
-  ctx.fillStyle = currentState.backgroundColor;
-  ctx.fillRect(0, 0, size, size);
+  ctxExport.fillStyle = currentState.backgroundColor;
+  ctxExport.fillRect(0, 0, size, size);
 
   const scale = currentState.contentSize / 100;
 
   if (currentState.contentType === "emoji" && currentState.emoji) {
-    ctx.font = `${size * 0.5 * scale}px Arial`;
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
+    ctxExport.font = `${size * 0.5 * scale}px Arial`;
+    ctxExport.textAlign = "center";
+    ctxExport.textBaseline = "middle";
 
     if (currentState.hasShadow) {
-      ctx.shadowColor = "rgba(0,0,0,0.3)";
-      ctx.shadowBlur = 4;
-      ctx.shadowOffsetX = 3;
-      ctx.shadowOffsetY = 3;
+      ctxExport.shadowColor = "rgba(0,0,0,0.3)";
+      ctxExport.shadowBlur = 4;
+      ctxExport.shadowOffsetX = 3;
+      ctxExport.shadowOffsetY = 3;
     }
-
-    ctx.fillText(currentState.emoji, size / 2, size / 2);
+    ctxExport.fillStyle = "#000";
+    ctxExport.fillText(currentState.emoji, size / 2, size / 2);
   } else if (currentState.contentType === "image" && currentState.imageUrl) {
     const img = new Image();
     img.onload = () => {
@@ -355,13 +341,13 @@ const createExportCanvas = (size) => {
       }
 
       if (currentState.hasShadow) {
-        ctx.shadowColor = "rgba(0,0,0,0.3)";
-        ctx.shadowBlur = 4;
-        ctx.shadowOffsetX = 3;
-        ctx.shadowOffsetY = 3;
+        ctxExport.shadowColor = "rgba(0,0,0,0.3)";
+        ctxExport.shadowBlur = 4;
+        ctxExport.shadowOffsetX = 3;
+        ctxExport.shadowOffsetY = 3;
       }
 
-      ctx.drawImage(
+      ctxExport.drawImage(
         img,
         (size - drawWidth) / 2,
         (size - drawHeight) / 2,
@@ -369,7 +355,6 @@ const createExportCanvas = (size) => {
         drawHeight
       );
 
-      // Update download link after image is drawn
       const dataUrl = exportCanvas.toDataURL("image/png");
       const downloadLink = document.createElement("a");
       downloadLink.href = dataUrl;
@@ -377,7 +362,7 @@ const createExportCanvas = (size) => {
       downloadLink.click();
     };
     img.src = currentState.imageUrl;
-    return; // Early return for async image processing
+    return;
   }
 
   return exportCanvas;
@@ -395,13 +380,7 @@ document
   .addEventListener("emoji-click", (event) => {
     currentState.contentType = "emoji";
     currentState.emoji = event.detail.emoji.unicode;
-    // Если до этого был режим image, сбрасываем загруженное изображение и спрайт
     loadedImg = null;
-    if (imageSprite) {
-      emojiGroup.remove(imageSprite);
-      imageSprite = null;
-    }
-    // Сброс размера в 100%
     currentState.contentSize = 100;
     sizeSlider.value = 100;
     sizeValue.textContent = "100";
@@ -466,7 +445,7 @@ updateAvatar();
 // Picker Bounds Checker
 
 // DOM elements
-const emojiButton = document.querySelector("#emoji-button"); // кнопка для открытия
+const emojiButton = document.querySelector("#emoji-button"); // open button
 const emojiPicker = document.querySelector("emoji-picker");
 
 // Showing picker function
