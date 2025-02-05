@@ -17,7 +17,7 @@ emoji-picker {
 
 @media (max-width: 768px) {
   emoji-picker {
-    left: 0;
+    left: -80px;
   }
 }
 
